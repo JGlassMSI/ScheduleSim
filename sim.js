@@ -207,6 +207,9 @@ function setup(){
     reset_button.mousePressed(() => {
         resetCustomSchedule(schedule_inputs, spacing)})
     schedule_controls.push({ id: "resetsched", element: reset_button, x: 250, y: 175})
+
+    const readme_link = createA("readme.html", "VIEW README")
+    readme_link.position(550,50)
 }
   
 function draw() {
@@ -467,6 +470,14 @@ function draw() {
         }
     }
     pop()
+
+    //Title
+    push()
+    textSize(36)
+    noStroke()
+    fill(0)
+    textAlign(CENTER, TOP)
+    text("mUSic Schedule Simulator", 600, 10)
 
     //custom schdule window
     fill(230)
