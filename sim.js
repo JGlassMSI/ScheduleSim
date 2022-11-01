@@ -105,6 +105,7 @@ let schedule_controls = Array()
 
 //Initialize Groups
 let groups = []
+let groups_per_hour = 0
 
 function init_groups(schedule, offset, number){
     groups = []
@@ -113,6 +114,7 @@ function init_groups(schedule, offset, number){
             {name: num + 1, hue: (num * .38) % 1, timeOffset: num*(offset) , schedule: schedule.movement, signals: schedule.signals}
         )
     }
+    groups_per_hour = (60*60) / offset
 }
 
 init_groups(DD_100_SCHEDULE, DD_100_OFFSET, NUM_GROUPS)
@@ -383,16 +385,52 @@ function draw() {
 
     //Zoom caption
     push()
-    textSize(18)
+    textSize(14)
     textAlign(LEFT, BOTTOM)
     fill(0,0,180)
     text(`Zoom x${graph_x_scale}`, 230, 635)
     if (graph_x_scale == 1 ){
         textSize(14)
-        text("(Scroll locked at widest zoom)", 320, 635)
+        text("(Scroll locked at widest zoom)", 300, 635)
     }
     pop()
 
+    //controls
+    push()
+    textSize(18)
+    noStroke()
+    fill(0)
+    textAlign(LEFT, BOTTOM)
+    text("Controls", 100, 300)
+    textSize(14)
+    let controls = [
+        'Space - Pause/Play',
+        '+/-  - Speed Up/Slow Down',
+        'Mouse Wheel - Zoom Graph',
+        'Drag left/Right - Scroll Graph',
+        'Middle click on timeline - jump to time',
+        'd - debug info'
+    ]
+    controls.forEach((instruction, i) => {
+        text(instruction, 100, 325+ i * 20)
+    });
+    pop()
+
+    //throughput
+    push()
+    textSize(14)
+    strokeWeight(.5)
+    noStroke
+    fill(0)
+    textAlign(LEFT, BOTTOM)
+    var start_y = 820
+    text(`This schedule passes ${groups_per_hour} groups per hour`, 50, start_y)
+    text(`Assuming 12 people per group, this is ${groups_per_hour * 12} people per hour`, 50, start_y + 20)
+    text(`Assuming 5 hours run per day, this is ${groups_per_hour * 12 * 5 + 12} per day`, 50, start_y + 40)
+    text(`Assuming 355 days per year, this is ${(groups_per_hour * 12 * 5 + 12)* 355} per year`, 50, start_y + 60)
+    pop()
+
+    //graph labels
     push()
     for (const [num, room] of rooms.entries()){
         //Room labels
@@ -424,9 +462,6 @@ function draw() {
             text(`${key} : ${value}`, 0, index * 20 + 10)
             index += 1
         }
-    }
-    else {
-        text("Press 'd' for debug info", 0, 10)
     }
     pop()
 
