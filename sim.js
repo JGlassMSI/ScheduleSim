@@ -484,7 +484,7 @@ function draw() {
 
     if (scheduleSelect.value() === "Custom Schedule"){
         let inputs = Array()
-        makeCustomScheduleWindow(700, 20, schedule_inputs, schedule_controls)
+        makeCustomScheduleWindow(820, 20, schedule_inputs, schedule_controls)
     }
     else {
         hideCustomScheduleWindow(schedule_inputs, schedule_controls)
@@ -800,12 +800,16 @@ function secondsPerDivision(scale) {
 
 function makeCustomScheduleWindow(x, y, custom_schedule_inputs, buttons){    
     push()
+    fill(100)
+    rect(x-3, y-3, 400+6, 200+6)
+    fill(220)
     rect(x,y,400,200)
 
     fill(0)
     stroke(0)
     textSize(20)
     textAlign(RIGHT, TOP)
+    strokeWeight(.5)
     text("CUSTOM SCHEDULE\nTIMINGS", x + 390, y+10)
 
     textSize(16)
