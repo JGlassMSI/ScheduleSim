@@ -372,12 +372,25 @@ function draw() {
     image(labelledGraph, GRAPH_CORNER_X, GRAPH_CORNER_Y)
     //image(graph, 60, 500, 0 + GRAPH_DRAW_WIDTH, 140, graph_start, 0, GRAPH_TRUE_WIDTH/graph_x_scale, 140)
 
+    //"Time" caption
     push()
     textSize(24)
     fill(0)
     noStroke()
     textAlign(CENTER, TOP)
-    text("Time", 370, 645+150)
+    text("Time", 550, 645+150)
+    pop()
+
+    //Zoom caption
+    push()
+    textSize(18)
+    textAlign(LEFT, BOTTOM)
+    fill(0,0,180)
+    text(`Zoom x${graph_x_scale}`, 230, 635)
+    if (graph_x_scale == 1 ){
+        textSize(14)
+        text("(Scroll locked at widest zoom)", 320, 635)
+    }
     pop()
 
     push()
