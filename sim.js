@@ -649,8 +649,11 @@ function mousePressed(event){
             console.log(`CLicked in graph, time set to ${getTimeFromClick(event.x, event.y)}`)
             currentTime = getTimeFromClick(event.x, event.y)
         }
-    } 
     return false
+    } 
+    
+    //any other mouse button
+    return true
 }
 
 function clickInGraph(x, y){
