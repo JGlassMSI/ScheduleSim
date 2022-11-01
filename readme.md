@@ -15,6 +15,7 @@ The controls are:
  * The schedule-selector in the bottom-left selects one of three schedules
  * Roll the mouse wheel up and down to control the zoom level of the graph
  * Click and drag left and and right to scroll the graph.
+ * Middle click on the graph to jump to a specific time.
 
 ## Usage
 

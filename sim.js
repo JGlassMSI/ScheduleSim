@@ -30,27 +30,27 @@ const scheduleTypes = {
     PASSING: 'passing'
 }
 
-let DEFAULT_ROOM_SEC = (5 * 60) + 30
-let DEFAULT_PASSING_SEC = 15
+let ROLLING_ROOM_SEC = (5 * 60) + 30
+let ROLLING_PASSING_SEC = 15
 
-const DEFAULT_SCHEDULE = {movement: [
+const ROLLING_SCHEDULE = {movement: [
     {type: scheduleTypes.ROOM,    duration: 4 * 60,      location: rooms[rooms.findIndex((element) => element.name === 'In Line')] },
     {type: scheduleTypes.PASSING, duration: 15 },
     {type: scheduleTypes.ROOM,    duration: 1.75 * 60,      location: rooms[rooms.findIndex((element) => element.name === 'Lobby')] },
-    {type: scheduleTypes.PASSING, duration: DEFAULT_PASSING_SEC},
-    {type: scheduleTypes.ROOM,    duration: DEFAULT_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Preshow')] },
-    {type: scheduleTypes.PASSING, duration: DEFAULT_PASSING_SEC},
-    {type: scheduleTypes.ROOM,    duration: DEFAULT_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Zone 1')] },
-    {type: scheduleTypes.PASSING, duration: DEFAULT_PASSING_SEC},
-    {type: scheduleTypes.ROOM,    duration: DEFAULT_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Zone 2')] },
-    {type: scheduleTypes.PASSING, duration: DEFAULT_PASSING_SEC},
-    {type: scheduleTypes.ROOM,    duration: DEFAULT_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Zone 3')] },
-    {type: scheduleTypes.PASSING, duration: DEFAULT_PASSING_SEC},
-    {type: scheduleTypes.ROOM,    duration: DEFAULT_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Exit')] },
+    {type: scheduleTypes.PASSING, duration: ROLLING_PASSING_SEC},
+    {type: scheduleTypes.ROOM,    duration: ROLLING_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Preshow')] },
+    {type: scheduleTypes.PASSING, duration: ROLLING_PASSING_SEC},
+    {type: scheduleTypes.ROOM,    duration: ROLLING_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Zone 1')] },
+    {type: scheduleTypes.PASSING, duration: ROLLING_PASSING_SEC},
+    {type: scheduleTypes.ROOM,    duration: ROLLING_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Zone 2')] },
+    {type: scheduleTypes.PASSING, duration: ROLLING_PASSING_SEC},
+    {type: scheduleTypes.ROOM,    duration: ROLLING_ROOM_SEC,      location: rooms[rooms.findIndex((element) => element.name === 'Zone 3')] },
+    {type: scheduleTypes.PASSING, duration: ROLLING_PASSING_SEC},
+    {type: scheduleTypes.ROOM,    duration: 90,      location: rooms[rooms.findIndex((element) => element.name === 'Exit')] },
     ],
     signals: []}
 
-const DEFAULT_SCHEDULE_OFFSET = DEFAULT_ROOM_SEC + (2 * DEFAULT_PASSING_SEC)
+const ROLLING_SCHEDULE_OFFSET = ROLLING_ROOM_SEC + (2 * ROLLING_PASSING_SEC)
 
 const DD_100_SCHEDULE = {movement: [
     {type: scheduleTypes.ROOM,    duration: 4.0 * 60,              location: rooms[rooms.findIndex((element) => element.name === 'In Line')] },
@@ -119,7 +119,9 @@ init_groups(DD_100_SCHEDULE, DD_100_OFFSET, 15)
 //Charting and Graphing
 const GRAPHLINE_HEIGHT = 20
 const GRAPH_TRUE_WIDTH = 10000
-const GRAPH_DRAW_WIDTH = 650
+const GRAPH_DRAW_WIDTH = 1150
+const GRAPH_CORNER_X = 60
+const GRAPH_CORNER_Y = 650
 let graph_x_scale = 1
 let graph_start = 0
 
@@ -137,7 +139,7 @@ let paused = false
 const MAX_TIME_RATE = 300
 
 function setup(){
-    createCanvas( ROOM_WIDTH * 7 + GUTTER * 2, 700);
+    createCanvas( ROOM_WIDTH * 7 + GUTTER * 2, 900);
     graph = createGraphics(GRAPH_TRUE_WIDTH,140)
     labelledGraph = createGraphics(GRAPH_TRUE_WIDTH, 140)
 
@@ -159,12 +161,12 @@ function setup(){
     speedUp.mousePressed(slower)
 
     scheduleSelect = createSelect()
-    scheduleSelect.position(75,475)
+    scheduleSelect.position(75,475+150)
     scheduleSelect.option('100% DD Schedule')
     scheduleSelect.option('Rolling Schedule')
     scheduleSelect.option('Custom Schedule')
-    //scheduleSelect.selected('100% DD Schedule')
-    scheduleSelect.selected('Custom Schedule')
+    scheduleSelect.selected('100% DD Schedule')
+    //scheduleSelect.selected('Custom Schedule')
     scheduleSelect.changed(setSchedule)
 
     //List of inputs for customizing schedule:
@@ -365,7 +367,7 @@ function draw() {
     createGraph(graph)
     labelGraph(graph)
     //image(labelledGraph, 60, 500, 0 + GRAPH_DRAW_WIDTH, 140, 0, 0, GRAPH_DRAW_WIDTH, 140)
-    image(labelledGraph, 60, 500)
+    image(labelledGraph, GRAPH_CORNER_X, GRAPH_CORNER_Y)
     //image(graph, 60, 500, 0 + GRAPH_DRAW_WIDTH, 140, graph_start, 0, GRAPH_TRUE_WIDTH/graph_x_scale, 140)
 
     push()
@@ -373,7 +375,7 @@ function draw() {
     fill(0)
     noStroke()
     textAlign(CENTER, TOP)
-    text("Time", 370, 645)
+    text("Time", 370, 645+150)
     pop()
 
     push()
@@ -383,7 +385,7 @@ function draw() {
         textAlign(LEFT, CENTER)
         fill(0)
         noStroke()
-        text(room.name, 0, 500 + num * 20 + 10)
+        text(room.name, 0, 500 + num * 20 + 10 + 150)
     }
     pop()
 
@@ -640,6 +642,29 @@ function mouseDragged(event){
     graph.start = Math.min(graph_start, GRAPH_TRUE_WIDTH)
 }
 
+function mousePressed(event){
+    if (mouseButton === CENTER ){
+        console.log(event)
+        if (clickInGraph(event.x, event.y)){
+            console.log(`CLicked in graph, time set to ${getTimeFromClick(event.x, event.y)}`)
+            currentTime = getTimeFromClick(event.x, event.y)
+        }
+    } 
+    return false
+}
+
+function clickInGraph(x, y){
+    if (GRAPH_CORNER_X <= x && x <= (GRAPH_CORNER_X + GRAPH_DRAW_WIDTH) &&
+        GRAPH_CORNER_Y <= y && y <= (GRAPH_CORNER_Y + (GRAPHLINE_HEIGHT * 7))){
+            return true
+        }
+    return false
+}
+
+function getTimeFromClick(x, y){
+        return graphToScreenScale(x - GRAPH_CORNER_X - graph_start)
+}
+
 function graphToScreenScale(graphDistance){
     return graphDistance * (GRAPH_TRUE_WIDTH / GRAPH_DRAW_WIDTH) / graph_x_scale
 }
@@ -663,7 +688,7 @@ function setSchedule(){
         currentTime = 0
     }
     else if (sched === "Rolling Schedule"){
-        init_groups(DEFAULT_SCHEDULE, DEFAULT_SCHEDULE_OFFSET, 15)
+        init_groups(ROLLING_SCHEDULE, ROLLING_SCHEDULE_OFFSET, 15)
         currentTime = 0
     }
     else if (sched === "Custom Schedule"){
