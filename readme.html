@@ -1,0 +1,46 @@
+<head>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+</head>
+<body style="margin:2rem; background-color:aliceblue">
+    <h1 class="text-3xl mb-6" id="schedulesim">ScheduleSim</h1>
+    <p>Provides on-rails simulation of a number of groups passing through a technical space with 5 rooms, plus and entry and exit.</p>
+    <p><img style="height:auto; width:auto" src="screenshot.PNG" alt="A screenshot of schedule-sim running"></p>
+    <h2 id="running-the-sim">Running the Sim</h2>
+    <ol>
+    <li>From the Code menu (button) in the upper right of this page, select &#39;Download ZIP&#39;</li>
+    <li>Extract the contents of the zip folder to your harddrive</li>
+    <li>Open <code>schedulesim.html</code> in a web browser by double-clicking it, or from your browser&#39;s File menu select Open.</li>
+    </ol>
+    <p>The controls are:</p>
+    <ul>
+    <li>The time control buttons in the bottom-right control the speed and flow of time</li>
+    <li>The schedule-selector in the bottom-left selects one of three schedules</li>
+    <li>Roll the mouse wheel up and down to control the zoom level of the graph</li>
+    <li>Click and drag left and and right to scroll the graph.</li>
+    <li>Middle click on the graph to jump to a specific time.</li>
+    <li>Spacebar to pause</li>
+    <li>&#39;+&#39; and &#39;-&#39; to speed up or slow down</li>
+    </ul>
+    <h2 id="usage">Usage</h2>
+    <h3 id="room-flow-display">Room Flow Display</h3>
+    <p>The central part of the simulation represents the 5 main rooms of the experience (Lobby, Preshow, Zone 1, Zone 2, and Zone 3), plus an additional &#39;space&#39; before the start and after the end to allow visualizing guests entering/existing the experience. Groups are color-coded for easy cross-referencing with the graph below.</p>
+    <p>When groups are active in a space, they are represented with a rotating diamond shape. While groups are transitioning, they are represented by a dimmed circle.</p>
+    <p>Each room is filled with the color of the group that is currently either occupying it or transitioning in/out of it.</p>
+    <h3 id="time-speed-controls">Time/Speed Controls</h3>
+    <p>The clock in the lower right displays the relative runtime of the exhibit. The <code>Play</code> and <code>Pause</code> buttons start and stop the simulation. The <code>Faster</code> and <code>Slower</code> buttons increase and decrease the run speed, including the ability to reverse the flow of time.</p>
+    <h3 id="schedule-display">Schedule Display</h3>
+    <h4 id="graph">Graph</h4>
+    <p>The graph in the bottom-left shows the location of each group as it moves through the 7 key spaces in the exhibit (5 rooms, plus before-entering and after-leaving). When a group is transitioning between spaces, it is shown as occupying both, to avoid groups colliding with or being able to see each other.</p>
+    <p>Click and</p>
+    <h4 id="schedule-select">Schedule Select</h4>
+    <p>The selector above the schedule display allows the user to select the current schedule. Changing the schedule will reset the simulation time to 00:00.</p>
+    <p>The schedules are:</p>
+    <ul>
+    <li>The schedule as proposed in the 100% DD package, as represented in the Miro graph.</li>
+    <li>A purely &quot;rolling&quot; schedule, where each room is exactly 5.5 minutes and each transition is 15 seconds.</li>
+    <li>A &quot;custom&quot; schedule. This schedule defaults to being the same as the 100% DD schedule, but the duration of each transition and room can be adjusted using the pop-up menu.</li>
+    </ul>
+    <h4 id="custom-schedule">Custom Schedule</h4>
+    <p>When the &#39;custom schedule&#39; is selected, an additional menu appears in the top-right of the screen, allowing the user to adjust the timings and transitions between each room. All timings are in seconds.</p>
+    <p>The timings listed default to the values in the 100% DD schedule. After changing the timing values, pressing <code>Set Schedule</code> will push the new timing values into the simulation. Pressing <code>Reset Schedule</code> will reset all values to match the 100% DD schedule, and push them into the simulation.</p>
+</body>
