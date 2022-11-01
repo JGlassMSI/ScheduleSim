@@ -143,7 +143,7 @@ let paused = false
 const MAX_TIME_RATE = 300
 
 function setup(){
-    createCanvas( ROOM_WIDTH * 7 + GUTTER * 2, 900);
+    createCanvas( ROOM_WIDTH * 7 + GUTTER * 2, 950);
     graph = createGraphics(GRAPH_TRUE_WIDTH,140)
     labelledGraph = createGraphics(GRAPH_TRUE_WIDTH, 140)
 
@@ -418,12 +418,15 @@ function draw() {
 
     //throughput
     push()
-    textSize(14)
+    textSize(18)
     strokeWeight(.5)
+    textAlign(LEFT, BOTTOM)
     noStroke
     fill(0)
-    textAlign(LEFT, BOTTOM)
-    var start_y = 820
+    text("Capacity", 50, 830)
+    textSize(14)
+    
+    var start_y = 850
     text(`This schedule passes ${groups_per_hour} groups per hour`, 50, start_y)
     text(`Assuming 12 people per group, this is ${groups_per_hour * 12} people per hour`, 50, start_y + 20)
     text(`Assuming 5 hours run per day, this is ${groups_per_hour * 12 * 5 + 12} per day`, 50, start_y + 40)
