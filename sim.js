@@ -13,6 +13,8 @@ let debug = false
 let ROOM_WIDTH = 150
 let GUTTER = 100
 
+const NUM_GROUPS = 50
+
 const rooms = [
     { "name": 'In Line', "shape": [100, 100, 150, 150]  ,"realRoom": false},
     { "name": 'Lobby'  , "shape": [250, 100, 150, 150]  ,"realRoom": true},
@@ -106,14 +108,14 @@ let groups = []
 
 function init_groups(schedule, offset, number){
     groups = []
-    for (const num of Array(15).keys()){
+    for (const num of Array(NUM_GROUPS).keys()){
         groups.push(
             {name: num + 1, hue: (num * .38) % 1, timeOffset: num*(offset) , schedule: schedule.movement, signals: schedule.signals}
         )
     }
 }
 
-init_groups(DD_100_SCHEDULE, DD_100_OFFSET, 15)
+init_groups(DD_100_SCHEDULE, DD_100_OFFSET, NUM_GROUPS)
 
 
 //Charting and Graphing
@@ -401,7 +403,8 @@ function draw() {
             'current time': currentTime,
             'graph_x_scale': graph_x_scale,
             'mouse_x': mouseX,
-            'mouse_y': mouseY
+            'mouse_y': mouseY,
+            'graph_start': graph_start
         }
         let index = 0
         for (const [key, value] of Object.entries(data)){
@@ -622,7 +625,11 @@ function labelGraph(sourceGraph){
         labelledGraph.fill(0,0,0,255)
         labelledGraph.textSize(12)
         labelledGraph.textAlign(CENTER, BOTTOM)
-        labelledGraph.text(Math.round(100 * seconds_per_division * num / 60) / 100, screenToGraphScale(num  * seconds_per_division) - screenToGraphScale(graph_start), 140)
+        let x = screenToGraphScale(num  * seconds_per_division) - screenToGraphScale(graph_start)
+        if (GRAPH_CORNER_X < x && x < GRAPH_CORNER_X + GRAPH_DRAW_WIDTH)
+            {
+                labelledGraph.text(Math.round(100 * seconds_per_division * num / 60) / 100, x, 140)
+            }
     }
     pop()
 }
@@ -639,7 +646,9 @@ function mouseWheel(event){
 function mouseDragged(event){
     graph_start -= (event.movementX * (GRAPH_TRUE_WIDTH / GRAPH_DRAW_WIDTH) / graph_x_scale)
     graph_start = Math.max(graph_start, 0)
-    graph.start = Math.min(graph_start, GRAPH_TRUE_WIDTH)
+
+    graph_start = Math.min(graph_start, (GRAPH_TRUE_WIDTH) * (graph_x_scale - 1) / graph_x_scale)
+    //graph_start = Math.min(graph_start, GRAPH_TRUE_WIDTH)
 }
 
 function mousePressed(event){
@@ -665,7 +674,7 @@ function clickInGraph(x, y){
 }
 
 function getTimeFromClick(x, y){
-        return graphToScreenScale(x - GRAPH_CORNER_X - graph_start)
+        return int(graphToScreenScale(x - GRAPH_CORNER_X - graph_start))
 }
 
 function graphToScreenScale(graphDistance){
@@ -681,21 +690,31 @@ function keyTyped(){
         debug = !debug
         console.log({debug})
     }
+    else if (key === ' '){
+        if (paused) play()
+        else pause()
+    }
+    else if (key === '+'){
+        faster()
+    }
+    else if (key === '-'){
+        slower()
+    }
 }
 
 function setSchedule(){
     let sched = scheduleSelect.value()
     console.log(`Got schedule valuve ${sched}`)
     if (sched === "100% DD Schedule"){
-        init_groups(DD_100_SCHEDULE, DD_100_OFFSET, 15)
+        init_groups(DD_100_SCHEDULE, DD_100_OFFSET, NUM_GROUPS)
         currentTime = 0
     }
     else if (sched === "Rolling Schedule"){
-        init_groups(ROLLING_SCHEDULE, ROLLING_SCHEDULE_OFFSET, 15)
+        init_groups(ROLLING_SCHEDULE, ROLLING_SCHEDULE_OFFSET, NUM_GROUPS)
         currentTime = 0
     }
     else if (sched === "Custom Schedule"){
-        init_groups(CUSTOM_SCHEDULE, CUSTOM_OFFSET, 15)
+        init_groups(CUSTOM_SCHEDULE, CUSTOM_OFFSET, NUM_GROUPS)
         currentTime = 0
     }
     else {
